@@ -19,3 +19,6 @@ npm start
 # start worker service
 npm run start-worker
 ```
+
+## Test
+Use Bot framework emulator to test
