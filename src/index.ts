@@ -15,12 +15,9 @@ import { BotFrameworkAdapter, MemoryStorage, ConversationState, UserState, Conve
 
 // This bot's main dialog.
 // import { EchoBot } from './bots/echoBot';
-import { BrokerBot } from './bots/brokerBot';
+import { InboundBot } from './bots/inboundBot';
+import { OutboundUtil } from './utils/outboundUtil'
 const { CustomPromptBot } = require('./bots/customPromptBot');
-const redis = require("redis");
-
-const outboundSubscriber = redis.createClient();
-const redisCli = redis.createClient();
 
 const memoryStorage = new MemoryStorage();
 const conversationState = new ConversationState(memoryStorage);
@@ -66,31 +63,14 @@ const onTurnErrorHandler = async (context, error) => {
 adapter.onTurnError = onTurnErrorHandler;
 
 // Create the main dialog.
-const myBot = new BrokerBot();
+const inboundBot = new InboundBot();
 
 // Listen for incoming requests.
 server.post('/api/messages', (req, res) => {
     adapter.processActivity(req, res, async (context) => {
         // Route to main dialog.
-        await myBot.run(context);
+        await inboundBot.run(context);
     });
 });
 
-outboundSubscriber.on("subscribe", function (channel, count) {
-    console.log('🔥 Subscribed to outbound broker')
-});
-
-outboundSubscriber.on("message", async (channel, message) => {
-    const msgObj = JSON.parse(message);
-    redisCli.get(`conversationRef-${msgObj.id}`, async (err, res) => {
-        const conversationReference: ConversationReference = JSON.parse(res);
-        await adapter.continueConversation(conversationReference, async turnContext => {
-            await turnContext.sendActivity(msgObj.output);
-        });
-    });
-
-
-});
-outboundSubscriber.subscribe("outbound");
-
-
+OutboundUtil.listen(adapter);
