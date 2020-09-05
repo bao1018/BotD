@@ -11,18 +11,13 @@ import * as restify from 'restify';
 
 // Import required bot services.
 // See https://aka.ms/bot-services to learn more about the different parts of a bot.
-import { BotFrameworkAdapter, MemoryStorage, ConversationState, UserState, ConversationReference } from 'botbuilder';
+import { BotFrameworkAdapter } from 'botbuilder';
 
 // This bot's main dialog.
 // import { EchoBot } from './bots/echoBot';
 import { InboundBot } from './bots/inboundBot';
 import { OutboundUtil } from './utils/outboundUtil'
-const { CustomPromptBot } = require('./bots/customPromptBot');
 
-const memoryStorage = new MemoryStorage();
-const conversationState = new ConversationState(memoryStorage);
-const userState = new UserState(memoryStorage);
-const bot = new CustomPromptBot(conversationState, userState);
 
 // Create HTTP server.
 const server = restify.createServer();

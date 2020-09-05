@@ -1,6 +1,7 @@
 import { MessageFactory, TurnContext } from 'botbuilder';
 const redis = require("redis");
 const inboundPublisher = redis.createClient();
+import { SessionUtil } from './sessionUtil';
 
 export class InboundUtil {
 
@@ -12,9 +13,15 @@ export class InboundUtil {
     public static async handleNewMemberActivity(context: TurnContext) {
         const membersAdded = context.activity.membersAdded;
         const welcomeText = 'Hello and welcome!';
+        const optionText = `Type below options to go through the demo:\n\n
+        A: Adaptive Card Demo\n
+        B: Flow Demo\n
+        Others: Echo Message Demo
+        `;
         for (const member of membersAdded) {
             if (member.id !== context.activity.recipient.id) {
                 await context.sendActivity(MessageFactory.text(welcomeText, welcomeText));
+                await context.sendActivity(MessageFactory.text(optionText, optionText));
             }
         }
 
@@ -26,11 +33,7 @@ export class InboundUtil {
     }
 
     private static sendToWorker(context) {
-        inboundPublisher.publish("inbound", JSON.stringify({
-            id: context.activity.recipient.id,
-            input: context.activity.text,
-            output: ''
-        }));
+        const session = SessionUtil.newSession(context);
+        inboundPublisher.publish("inbound", JSON.stringify(session));
     }
-
 }

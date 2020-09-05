@@ -1,5 +1,6 @@
-import { BotFrameworkAdapter, MessageFactory, TurnContext, ConversationReference } from 'botbuilder';
+import { BotFrameworkAdapter, ConversationReference } from 'botbuilder';
 const redis = require("redis");
+import { Event, InitiatorType, Session, MessageType } from '../models/session'
 
 const outboundSubscriber = redis.createClient();
 const redisCli = redis.createClient();
@@ -12,11 +13,11 @@ export class OutboundUtil {
         });
         
         outboundSubscriber.on("message", async (channel, message) => {
-            const msgObj = JSON.parse(message);
-            redisCli.get(`conversationRef-${msgObj.id}`, async (err, res) => {
+            const session: Session = JSON.parse(message);
+            redisCli.get(`conversationRef-${session.id}`, async (err, res) => {
                 const conversationReference: ConversationReference = JSON.parse(res);
                 await adapter.continueConversation(conversationReference, async turnContext => {
-                    await turnContext.sendActivity(msgObj.output);
+                    await turnContext.sendActivity(session.output.value);
                 });
             });
         
