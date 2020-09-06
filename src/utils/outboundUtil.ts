@@ -1,5 +1,5 @@
 import { BotFrameworkAdapter, Activity, Attachment, CardFactory, MessageFactory } from 'botbuilder';
-import { Session, CustomizedDialog, MessageType } from '../models/session'
+import { CustomizedDialog, MessageType } from '../models/session'
 
 const redis = require("redis");
 const outboundSubscriber = redis.createClient();
