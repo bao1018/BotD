@@ -6,7 +6,7 @@ export class InboundBot extends ActivityHandler {
         super();
         // See https://aka.ms/about-bot-activity-message to learn more about the message and other activity types.
         this.onMessage(async (context, next) => {
-            InboundUtil.handleNewInputActivity(context);
+            await InboundUtil.handleNewInputActivity(context);
             await next();
         });
 

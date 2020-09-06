@@ -10,8 +10,7 @@ export class InboundUtil {
     public static async handleNewInputActivity(context: TurnContext) {
         const stopDialog = this.terminateDialog(context.activity);
         if(stopDialog) {
-           context.sendActivity('Your user session is reset, pls start from beginning');
-           return;
+           return await context.sendActivity('Your user session is reset, pls start from beginning');
         } else {
             const dialogId = await this.setupCustomizedDialog(context);
             this.sendToWorker(dialogId);
