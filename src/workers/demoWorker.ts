@@ -15,7 +15,7 @@ export class DemoWorker {
 
   public static async listen() {
     subscriber.on("subscribe", function (channel, count) {
-      console.log('🔥 Worker subscribed to inbound broker')
+      console.log('🚀 Worker subscribed to inbound broker')
     });
 
     subscriber.on("message", async (channel, message: string) => {

@@ -11,7 +11,7 @@ export class OutboundUtil {
 
     public static async listen(adapter: BotFrameworkAdapter) {
         outboundSubscriber.on("subscribe", function (channel, count) {
-            console.log('🔥 Subscribed to outbound broker')
+            console.log('🚗 Subscribed to outbound broker')
         });
 
         outboundSubscriber.on("message", async (channel, message) => {
