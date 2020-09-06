@@ -1,7 +1,7 @@
 import { BotFrameworkAdapter, ConversationReference } from 'botbuilder';
-const redis = require("redis");
-import { Event, InitiatorType, Session, MessageType } from '../models/session'
+import { Session, CustomizedDialog } from '../models/session'
 
+const redis = require("redis");
 const outboundSubscriber = redis.createClient();
 const redisCli = redis.createClient();
 
@@ -13,11 +13,11 @@ export class OutboundUtil {
         });
         
         outboundSubscriber.on("message", async (channel, message) => {
-            const session: Session = JSON.parse(message);
-            redisCli.get(`conversationRef-${session.id}`, async (err, res) => {
-                const conversationReference: ConversationReference = JSON.parse(res);
-                await adapter.continueConversation(conversationReference, async turnContext => {
-                    await turnContext.sendActivity(session.output.value);
+            console.log("Subscriber received message in channel: " + channel + " value: " + message);
+            redisCli.get(message, async (err, res) => {
+                const dialog: CustomizedDialog = JSON.parse(res);
+                await adapter.continueConversation(dialog.conRef, async turnContext => {
+                    await turnContext.sendActivity(dialog.userSession.output.value);
                 });
             });
         

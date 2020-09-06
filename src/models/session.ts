@@ -1,3 +1,11 @@
+import { ConversationReference } from "botbuilder";
+
+export interface CustomizedDialog {
+    conRef: Partial<ConversationReference>;
+    userSession: Session;
+}
+
+
 export interface Session {
     id: string;
     state?: string;

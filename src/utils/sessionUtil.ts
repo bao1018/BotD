@@ -1,5 +1,5 @@
 import { Event, InitiatorType, Session, MessageType } from '../models/session'
-
+import { Activity } from 'botbuilder';
 export class SessionUtil {
 
     public static addHistory(session: Session, initiatorType: InitiatorType, messageType: MessageType, value: string) {
@@ -13,10 +13,10 @@ export class SessionUtil {
     }
 
 
-    public static newSession(context): Session {
+    public static newSession(activity: Activity): Session {
         const session: Session = {
-            id: context.activity.recipient.id,
-            input: { type: MessageType.text, value: context.activity.text },
+            id: activity.recipient.id,
+            input: { type: MessageType.text, value: activity.text },
             output: {
                 type: MessageType.text,
                 value: ''
@@ -24,7 +24,15 @@ export class SessionUtil {
             flow: null,
             eventHistory: []
         };
-        this.addHistory(session, InitiatorType.user, MessageType.text, context.activity.tex);
+        this.addHistory(session, InitiatorType.user, MessageType.text, activity.text);
+        return session;
+    }
+
+    public static updateSession(activity: Activity, session: Session): Session {
+        session.input.type = MessageType.text;
+        session.input.value = activity.text;
+        this.addHistory(session, InitiatorType.user, MessageType.text, activity.text);
         return session;
     }
 }
+
