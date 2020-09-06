@@ -1,4 +1,4 @@
-import { ActivityHandler, MessageFactory, } from 'botbuilder';
+import { ActivityHandler } from 'botbuilder';
 import { InboundUtil } from '../utils/inboundUtil'
 
 export class InboundBot extends ActivityHandler {
