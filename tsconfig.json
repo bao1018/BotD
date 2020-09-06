@@ -8,5 +8,9 @@
     "sourceMap": true,
     "incremental": true,
     "tsBuildInfoFile": "./lib/.tsbuildinfo"
-  }
+    
+  },
+  "include": [
+    "./**/*",
+],
 }

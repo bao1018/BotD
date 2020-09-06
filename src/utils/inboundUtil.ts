@@ -8,16 +8,22 @@ const _ = require('lodash');
 export class InboundUtil {
 
     public static async handleNewInputActivity(context: TurnContext) {
-        const dialogId = await this.setupCustomizedDialog(context);
-        this.sendToWorker(dialogId);
+        const stopDialog = this.terminateDialog(context.activity);
+        if(stopDialog) {
+           context.sendActivity('Your user session is reset, pls start from beginning');
+           return;
+        } else {
+            const dialogId = await this.setupCustomizedDialog(context);
+            this.sendToWorker(dialogId);
+        }
     }
 
     public static async handleNewMemberActivity(context: TurnContext) {
         const membersAdded = context.activity.membersAdded;
         const welcomeText = 'Hello and welcome!';
         const optionText = `Type below options to go through the demo:\n\n
-        1: Adaptive Card Demo\n
-        2: Flow Demo\n
+        1: User Feedback Demo (AdaptiveCard)\n
+        2: User Register Demo (Dialog flow)\n
         Others: Echo Message Demo
         `;
         for (const member of membersAdded) {
@@ -53,5 +59,16 @@ export class InboundUtil {
 
     private static sendToWorker(dialogId: string) {
         RedisUtil.publish("inbound", dialogId);
+    }
+
+    private static terminateDialog(activity: Activity): boolean{
+        const stop_words = [':q'];
+        if(activity.text && (stop_words.indexOf(activity.text) > -1)) {
+            RedisUtil.delete(`dialog-${activity.recipient.id}`);
+            return true;
+        } else {
+            return false;
+        }
+
     }
 }

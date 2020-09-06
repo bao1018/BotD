@@ -18,6 +18,9 @@ export class RedisUtil {
         return client.publish(topic, message);
     }
 
+    public static delete(key: string) {
+        return client.del(key);
+    }
     private static async text(key: string): Promise<any> {
         let doc: any = await new Promise((resolve) => {
             client.get(key, function (err, res) {
