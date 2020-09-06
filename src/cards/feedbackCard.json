@@ -1,0 +1,30 @@
+{
+    "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+    "type": "AdaptiveCard",
+    "version": "1.0",
+    "body": [
+        {
+            "type": "TextBlock",
+            "text": "Welcome to use the bot, you can type the feedback",
+            "wrap": true,
+            "weight": "default",
+            "size": "large"
+        },
+        {
+            "type": "Input.Text",
+            "id": "feedback",
+            "placeholder": "please add your feedback here",
+            "isMultiline": true
+        }
+    ],
+    "actions": [
+        {
+            "type": "Action.Submit",
+            "title": "Submit",
+            "data": {
+                "choice": "submit",
+                "second": true
+            }
+        }
+    ]
+  }

@@ -1,11 +1,21 @@
+import { ConversationReference } from "botbuilder";
+
+export interface CustomizedDialog {
+    conRef: Partial<ConversationReference>;
+    userSession: Session;
+}
+
+
 export interface Session {
     id: string;
-    state?: string;
+    state?: DialogState;
+    service?: string;
     email?: string;
     username?: string;
+    step?: number,
     input: {
         type: MessageType
-        value: string
+        value: string | any
     };
     output: {
         type: MessageType
@@ -18,7 +28,7 @@ export interface Session {
 export interface Event {
     initiator: InitiatorType; // bot or user
     type: MessageType; // card or plantext
-    value: string; // card name or user input
+    value: string | any; // card name or user input
     timestamp: Date
 }
 
@@ -31,4 +41,9 @@ export enum MessageType {
 export enum InitiatorType {
     bot,
     user
+}
+
+export enum DialogState {
+    NO_STATE,
+    IN_DIALOG,
 }
