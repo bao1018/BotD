@@ -2,8 +2,6 @@ import { Activity, MessageFactory, TurnContext } from 'botbuilder';
 import { RedisUtil } from './redisUtil'
 import { SessionUtil } from './sessionUtil';
 import { CustomizedDialog } from '../models/session';
-const _ = require('lodash');
-
 
 export class InboundUtil {
 
@@ -35,9 +33,8 @@ export class InboundUtil {
     }
 
     private static async setupCustomizedDialog(context: TurnContext): Promise<string> {
-        const dialogId = `dialog-${context.activity.recipient.id}`
+        const dialogId = RedisUtil.getDialogKey(context.activity.recipient.id);
         const conversationReference = TurnContext.getConversationReference(context.activity);
-        const copyActivity: Activity = _.cloneDeep(context.activity);
         const dialog: CustomizedDialog = {
             conRef: conversationReference,
             userSession: null
@@ -46,11 +43,11 @@ export class InboundUtil {
         if (dialogInRedis) {
             // update dialog
             console.log('found dialog');
-            dialog.userSession = SessionUtil.updateSession(copyActivity, dialogInRedis.userSession)
+            dialog.userSession = SessionUtil.updateSession(context.activity, dialogInRedis.userSession)
             RedisUtil.set(dialogId, dialog, 60 * 60);
         } else { // new dialog
             console.log('new dialog');
-            dialog.userSession = SessionUtil.newSession(copyActivity)
+            dialog.userSession = SessionUtil.newSession(context.activity)
             RedisUtil.set(dialogId, dialog, 60 * 60);
         }
         return dialogId;
@@ -63,7 +60,7 @@ export class InboundUtil {
     private static terminateDialog(activity: Activity): boolean{
         const stop_words = [':q'];
         if(activity.text && (stop_words.indexOf(activity.text) > -1)) {
-            RedisUtil.delete(`dialog-${activity.recipient.id}`);
+            RedisUtil.delete(RedisUtil.getDialogKey(activity.recipient.id));
             return true;
         } else {
             return false;

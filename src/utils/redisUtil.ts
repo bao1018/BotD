@@ -21,6 +21,10 @@ export class RedisUtil {
     public static delete(key: string) {
         return client.del(key);
     }
+
+    public static getDialogKey(id: string) {
+        return `dialog-${id}`;
+    }
     private static async text(key: string): Promise<any> {
         let doc: any = await new Promise((resolve) => {
             client.get(key, function (err, res) {
