@@ -1,5 +1,5 @@
 # BotD
-means a bot template wth distribution
+`BotD` means a *bot* framework template wth *D*istribution capability
 
 ## Install
 
