@@ -32,20 +32,20 @@ export class InboundUtil {
     private static async setupCustomizedDialog(context: TurnContext): Promise<string> {
         const dialogId = `dialog-${context.activity.recipient.id}`
         const conversationReference = TurnContext.getConversationReference(context.activity);
-        const copyActivity: Activity = _.cloneDeep(conversationReference);
-        console.log('did:', dialogId);
-        const dialog: CustomizedDialog = await RedisUtil.get(dialogId);
-        if (dialog) {
-            console.log('found dialog', dialog);
+        const copyActivity: Activity = _.cloneDeep(context.activity);
+        const dialog: CustomizedDialog = {
+            conRef: conversationReference,
+            userSession: null
+        }
+        const dialogInRedis: CustomizedDialog = await RedisUtil.get(dialogId);
+        if (dialogInRedis) {
             // update dialog
-            SessionUtil.updateSession(copyActivity, dialog.userSession)
+            console.log('found dialog');
+            dialog.userSession = SessionUtil.updateSession(copyActivity, dialogInRedis.userSession)
             RedisUtil.set(dialogId, dialog, 60 * 60);
         } else { // new dialog
             console.log('new dialog');
-            const dialog: CustomizedDialog = {
-                conRef: conversationReference,
-                userSession: SessionUtil.newSession(copyActivity)
-            }
+            dialog.userSession = SessionUtil.newSession(copyActivity)
             RedisUtil.set(dialogId, dialog, 60 * 60);
         }
         return dialogId;
