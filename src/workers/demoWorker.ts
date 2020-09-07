@@ -9,6 +9,7 @@ import { FlowService } from "../services/flowService";
 import { CustomizedDialog, Session, DialogState } from '../models/session'
 
 import { RedisUtil } from '../utils/redisUtil'
+import { StatemMchineService } from '../services/stateMachineService';
 
 
 export class DemoWorker {
@@ -36,6 +37,7 @@ export class DemoWorker {
 
   public static getServiceType(session: Session): BaseService {
     if (session.state === DialogState.NO_STATE) { // no state conversation
+      console.log("input dialog has no state");
       switch (session.input.value) {
         case '1': {
           return new CardService();
@@ -43,17 +45,24 @@ export class DemoWorker {
         case '2': {
           return new FlowService();
         }
+        case '3': {
+          return new StatemMchineService();
+        }
         default: {
           return new EchoService();
         }
       }
     } else {
+      console.log("input dialog has state");
       switch (session.service) { // already in a dialog flow
         case 'CardService': {
           return new CardService();
         }
         case 'FlowService': {
           return new FlowService();
+        }
+        case 'StatemMchineService': {
+          return new StatemMchineService();
         }
         default: {
           return new EchoService();

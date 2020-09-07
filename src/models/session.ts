@@ -21,7 +21,8 @@ export interface Session {
         type: MessageType
         value: string
     };
-    flow?: any;
+    flowState?: string; // statemachine state
+    flow?: any; // statemachine definition
     eventHistory?: Event[];
 }
 

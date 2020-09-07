@@ -21,6 +21,7 @@ export class InboundUtil {
         const optionText = `Type below options to go through the demo:\n\n
         1: User Feedback Demo (AdaptiveCard)\n
         2: User Register Demo (Dialog flow)\n
+        3: Select Drink Demo (State Machine)\n
         Others: Echo Message Demo
         `;
         for (const member of membersAdded) {

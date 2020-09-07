@@ -48,7 +48,8 @@ export class FlowService extends BaseService{
         session.output.type = MessageType.text;
         console.log('age:', session.input.value);
         session.output.value = "You have registered successfully, thanks for using out bot, see you next time";
-        super.addHistory(session, InitiatorType.bot, session.output.type, session.output.value)
+        // super.addHistory(session, InitiatorType.bot, session.output.type, session.output.value)
+        super.cleanHistory(session);
     }
 
 }

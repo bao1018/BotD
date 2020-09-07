@@ -11,7 +11,10 @@ export class SessionUtil {
         }
         session.eventHistory.push(event);
     }
-
+    
+    public static cleanHistory(session: Session) {
+        session.eventHistory.length = 0;
+    }
 
     public static newSession(activity: Activity): Session {
         const session: Session = {

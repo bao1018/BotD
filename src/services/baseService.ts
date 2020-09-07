@@ -7,7 +7,9 @@ export abstract class BaseService {
        return SessionUtil.addHistory(session, initiatorType, messageType, value);
     }
 
-
+    public cleanHistory(session: Session) {
+        return SessionUtil.cleanHistory(session);
+     }
     public abstract async process(session : Session) : Promise<void> ;
 
 }

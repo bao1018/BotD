@@ -28,7 +28,8 @@ export class CardService extends BaseService {
         session.output.value = 'We have recieved your message: \n\n'
             + session.input.value.feedback
             + '\n\nThanks for your feedback! See you next time.';
-        super.addHistory(session, InitiatorType.bot, session.output.type, session.output.value)
+        // super.addHistory(session, InitiatorType.bot, session.output.type, session.output.value)
+        super.cleanHistory(session);
     }
 
 }
